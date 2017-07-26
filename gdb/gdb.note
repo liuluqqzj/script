@@ -1,0 +1,98 @@
+0.
+# objdump for kernel's vmlinux
+# objdump -S -D -a -h offsetof > offsetof.dump
+objdump -S -l -z vmlinux > vmlinux.txt
+  -h 显示目标文件各个section的头部摘要信息
+  -D 从objfile中反汇编那些特定指令机器码的all section
+# for same section
+objdump -S -l -z -j xxxx(section name) vmlinux > vmlinux.txt
+# for header info in all section
+objdump -x vmlinux > x.txt
+# for debug info, should be build with '-g' option
+objdump --debugging vmlinux > debugging.txt
+
+0.
+# strace depond on procfs, so: 
+# maybe should exe cmd: mount -t procfs proc /proc
+# or add line to /etc/fstab: proc                   /proc           procfs  rw              0       0
+strace/ltrace
+ -f         # trace child process
+ -o file    # output info to file
+ -p pid     # attach to process[pid]
+ -r         # add timestamp
+
+1.
+set follow-fork-mode child      # 命令设置gdb在fork之后跟踪子进程
+set follow-fork-mode parent     # 设置跟踪父进程
+
+follow-fork-mode    detach-on-fork      说明
+parent                   on         只调试主进程（GDB默认）
+child                    on         只调试子进程
+parent                   off        同时调试两个进程，gdb跟主进程，子进程block在fork位置
+child                    off        同时调试两个进程，gdb跟子进程，主进程block在fork位置
+
+GDB默认支持调试多线程，跟主线程，子线程block在create thread。
+查询线程：      info threads
+切换调试线程：  thread <thread number>
+
+2.
+# 奇奇怪怪的符号解析成用户易懂的符号
+set print demangle on
+set print asm-demangle on
+
+# 查看一个多态类型 显示其动态类型下的内存布局
+set print object on
+
+# GDB 中查看结构体对象或者类对象 多行显示
+set print pretty on
+
+# 直接查看虚函数表
+set print vtbl on
+
+# 命令查看虚函数表
+info vtbl object
+
+(gdb) p gc
+$11 = (GrandChild) {
+  <Child> = {
+    <Parent> = {
+      _vptr.Parent = 0x400e30 <vtable for GrandChild+16>, 
+      iparent = 10
+    }, 
+    members of Child: 
+    ichild = 100
+  }, 
+  members of GrandChild: 
+  igrandchild = 1000
+}
+
+3.
+x/nfu addr
+  n 打印当前地址开始后面的 n 个域
+  f 代表格式控制符，同 C 中的格式控制符
+  u u 代表每个域的字节数(b/h/w/g)
+
+4.
+  between start and run command difference
+  between next and step command difference
+  between next/step and nexti/stepi command difference
+  b 45 if size > 0
+  watch/rwatch/awatch               # modify/read/modify or read
+  finish
+  until location
+  continue 5                        # 遇到5个断点不停止，直到第6次遇到断点
+  return 0
+  jump location                     # line of source code
+  jump +10                          # offset of current
+  jump *0x12345678                  # jump to address
+  set disassemble-next-line on
+  disassemble addr_START, addr_END
+
+5.
+  set *addr = value
+  set register = value
+
+6. gdb打印数组
+  p (int[10])*a
+  or
+  p *a@10
