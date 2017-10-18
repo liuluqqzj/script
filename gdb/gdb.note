@@ -73,6 +73,7 @@ x/nfu addr
   u u 代表每个域的字节数(b/h/w/g)
 
 4.
+  wi    # GUI
   between start and run command difference
   between next and step command difference
   between next/step and nexti/stepi command difference
