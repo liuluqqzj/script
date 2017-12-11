@@ -1,0 +1,17 @@
+# unzip initrd.img
+mkdir /usr/src/initrd
+cp /boot/initrd-2.6.18-308.el5.img /usr/src/initrd
+cd /usrsrc/initrd
+ls
+
+mv initrd-2.6.18-308.el5.img initrd-2.6.18-308.el5.img.gz
+gunzip initrd-2.6.18-308.el5.img.gz
+cpio -i -d < initrd-2.6.18-308.el5.img
+ls
+
+# zip initrd.img
+find . -print | cpio -o -H newc > ../initrd-2.6.18-308.el5.img
+cd ..
+gzip -9 initrd-2.6.18-308.el5.img
+mv initrd-2.6.18-308.el5.img.gz initrd-2.6.18-308.el5.img  
+ls
