@@ -1,0 +1,38 @@
+ubuntu for adb device:
+
+# maybe the version is too old, you can download it from: https://developer.android.com/studio/releases/platform-tools
+sudo apt-get install android-tools-adb android-tools-fastboot
+
+vi ~/.android/adb_usb.ini
+   # Android 3rd party USB Vendor ID list
+   # Needed to access exotic vendors devices thru ADB
+
+   # rockchip
+   0x0525
+
+sudo vi  /etc/udev/rules.d/51-android.rules
+   SUBSYSTEM=="usb", ATTRS{idVendor}=="0525", ATTRS{idProduce}=="A4AC", MODE="0666", GROUP="plugdev"
+
+sudo /etc/init.d/udev restart
+adb kill-server
+adb devices
+   ???? no permissions
+
+sudo vi /lib/udev/rules.d/50-udev-default.rules
+   # than search "usb_device"
+   change from
+   SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664"
+   to
+   SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0666"
+
+sudo vi /lib/udev/rules.d/51-android.rules
+   # add context
+   SUBSYSTEM="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="0525", MODE="0666"
+
+sudo chmod a+rx /lib/udev/rules.d/51-android.rules
+
+sudo /etc/init.d/udev restart
+adb kill-server
+adb devices
+
+and plug out device and plug in
