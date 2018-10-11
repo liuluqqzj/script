@@ -1,0 +1,20 @@
+# to see the new disk
+lsblk
+
+# create new partition
+fdisk /dev/sdb
+ > m
+ > n
+ > e            # externtion partition
+ > 1
+ > Enter
+ > Enter
+ > w
+
+# format to ext4
+mkfs -t ext4 /dev/sdb
+
+# auto mount at power on
+vi /etc/fstab
+/dev/sdb /mnt/ ext4 defaults 1 1
+
