@@ -29,7 +29,7 @@ autocmd BufNewFile *.[ch],*.hpp,*.cpp,Makefile,*.mk,*.sh exec ":call SetTitle()"
 " add comments
 func SetComment()
     call setline(1,"/*================================================================") 
-    call append(line("."),   "*   Copyright (C) ".strftime("%Y")." Sangfor Ltd. All rights reserved.")
+    call append(line("."),   "*   Copyright (C) ".strftime("%Y")." Ltd. All rights reserved.")
     call append(line(".")+1, "*   ") 
     call append(line(".")+2, "*   File Name ：".expand("%:t")) 
     call append(line(".")+3, "*   Author    ：hptsf")
